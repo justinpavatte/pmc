@@ -19,7 +19,11 @@
     <input id="bob" />
     <script src="metalprices.js"></script>
     <script>
-        document.getElementById("bob").value = fetchBidPrice("gold");
+        async function updateGoldPrice() {
+            const bobInput = document.getElementById("bob");
+            bobInput.value = await fetchBidPrice("gold");
+        }
+        window.onload = updateGoldPrice;
     </script>
 </body>
 </html>
