@@ -48,8 +48,26 @@
         <input readonly id="scrapValue" />
     </div>
     <div>
-        <br><br>
-        <label><i>"Show Me Your Work..."</i></label>
+        <br>
+        <label><i>Details...</i></label>
+    </div>
+    <div>
+        <label for="gldSptPrc">current spot price:</label>
+    </div>
+    <div>
+        <input readonly id="gldSptPrc" />
+    </div>
+    <div>
+        <label for="spotFluc">spot fluc subtrahend:</label>
+    </div>
+    <div>
+        <input readonly id="spotFluc" />
+    </div>
+    <div>
+        <label for="prsdGrmInpt">parsed gram input:</label>
+    </div>
+    <div>
+        <input readonly id="prsdGrmInpt" />
     </div>
     <div>
         <label for="troyOzToGrmsFctr">toz to grm factor:</label>
@@ -58,11 +76,22 @@
         <input readonly id="troyOzToGrmsFctr" />
     </div>
     <div>
-        <label for="spotFluc">spot fluctuation subtrahend:</label>
+        <label for="krtFct">karat factor:</label>
     </div>
     <div>
-        <input readonly id="spotFluc" />
+        <input readonly id="krtFct" />
     </div>
+    <div>
+        <label for="rfDrt">refine/dirt factor:</label>
+    </div>
+    <div>
+        <input readonly id="rfDrt" />
+    </div>
+    <div>
+        <br>
+        <label><i>Notes...</i></label>
+    </div>
+    <div>The spot price is set by calling a web service to get the current bid price at the moment. This price is in dollars per troy ounce. The bid price shows what buyers are currently willing to pay. Therefore, this is the foundation for what we are willing to pay the customer.</div>
     <script src="metalprices.js"></script>
     <script>
         async function calcPrice() {
@@ -72,14 +101,6 @@
 
             let gramValue = document.getElementById('grams').value;
             let karatValue = document.getElementById('karat').value;
-
-            if (isNaN(gramValue) || gramValue.trim() === "") {
-                document.getElementById('grams').value = "";
-                //todo: clear out any results on the screen but leave Karat
-                
-                       
-                return;
-            }
 
             let gramNumber = parseFloat(gramValue);
             let karatFactor = 0.0;
@@ -91,11 +112,19 @@
             }
             let currentSpotGoldPricePerTroyOunce = await fetchBidPrice("gold");
             let fullValueForTrade = gramNumber * (currentSpotGoldPricePerTroyOunce - fluctuatingPriceFactor) * troyOuncesToGramsFactor * karatFactor * refineryFeeAndDirtFactor;
+            let roundedfullValueForTrade = fullValueForTrade.toFixed(2);
             let halfValueForScrap = fullValueForTrade / 2.0;
+            let roundedhalfValueForScrap = halfValueForScrap.toFixed(2);
 
-            document.getElementById('tradeValue').value = fullValueForTrade;
-            document.getElementById('scrapValue').value = halfValueForScrap;
+            document.getElementById('tradeValue').value = roundedfullValueForTrade;
+            document.getElementById('scrapValue').value = roundedhalfValueForScrap;
 
+            document.getElementById('gldSptPrc').value = currentSpotGoldPricePerTroyOunce;
+            document.getElementById('spotFluc').value = fluctuatingPriceFactor;
+            document.getElementById('prsdGrmInpt').value = gramNumber;
+            document.getElementById('troyOzToGrmsFctr').value = troyOuncesToGramsFactor;
+            document.getElementById('krtFct').value = karatFactor;
+            document.getElementById('rfDrt').value = refineryFeeAndDirtFactor;
 
         }
         //listen to button click
