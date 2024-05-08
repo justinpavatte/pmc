@@ -31,10 +31,84 @@
             <option value="10K">10K</option>
             <option value="14K">14K</option>
         </select>
+    </div>    
+    <div>
+        <button id="calcPriceBtn" onclick="calcPrice">Calculate</button>
+    </div>
+    <div>
+        <label for="tradeValue">Trade:</label>
+    </div>
+    <div>
+        <input readonly id="tradeValue" />
+    </div>
+    <div>
+        <label for="scrapValue">Scrap:</label>
+    </div>
+    <div>
+        <input readonly id="scrapValue" />
+    </div>
+    <div>
+        <br><br>
+        <label><i>"Show Me Your Work..."</i></label>
+    </div>
+    <div>
+        <label for="troyOzToGrmsFctr">toz to grm factor:</label>
+    </div>
+    <div>
+        <input readonly id="troyOzToGrmsFctr" />
+    </div>
+    <div>
+        <label for="spotFluc">spot fluctuation subtrahend:</label>
+    </div>
+    <div>
+        <input readonly id="spotFluc" />
     </div>
     <script src="metalprices.js"></script>
     <script>
+        async function calcPrice() {
+            const troyOuncesToGramsFactor = 0.0322;
+            const fluctuatingPriceFactor = 100.0;
+            const refineryFeeAndDirtFactor = 0.9175;
 
+            let gramValue = document.getElementById('grams').value;
+            let karatValue = document.getElementById('karat').value;
+
+            if (isNaN(gramValue) || gramValue.trim() === "") {
+                document.getElementById('grams').value = "";
+                //todo: clear out any results on the screen but leave Karat
+                
+                       
+                return;
+            }
+
+            let gramNumber = parseFloat(gramValue);
+            let karatFactor = 0.0;
+            if (karatValue == "10K") {
+                karatFactor = 10.0 / 24.0;
+            }
+            else if (karatValue == "14K") {
+                karatFactor = 14.0 / 24.0;
+            }
+            let currentSpotGoldPricePerTroyOunce = await fetchBidPrice("gold");
+            let fullValueForTrade = gramNumber * (currentSpotGoldPricePerTroyOunce - fluctuatingPriceFactor) * troyOuncesToGramsFactor * karatFactor * refineryFeeAndDirtFactor;
+            let halfValueForScrap = fullValueForTrade / 2.0;
+
+            document.getElementById('tradeValue').value = fullValueForTrade;
+            document.getElementById('scrapValue').value = halfValueForScrap;
+
+
+        }
+        //listen to button click
+        document.getElementById('calcPriceBtn').onclick = function () {
+            calcPrice();
+        };
+        //make enter the accept button
+        document.getElementById('grams').onkeydown = function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                calcPrice();
+            }
+        };
     </script>
 </body>
 </html>

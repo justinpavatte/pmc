@@ -21,7 +21,7 @@ label {
 
 input {
     font-size: 25px;
-    color: #E3E3E3;
+    color: #f9f7f7;
     margin: 5px;
     width: 250px;
     border-radius: 5px;
@@ -48,7 +48,7 @@ select {
     font-size: 20px;
     border-radius: 5px;
     margin-left: 2px;
-  }
+}
   
 select option {
     background-color: #333;
