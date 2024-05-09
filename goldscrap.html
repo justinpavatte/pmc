@@ -30,6 +30,7 @@
         <select id="karat">
             <option value="10K">10K</option>
             <option value="14K">14K</option>
+            <option value="18K">14K</option>
         </select>
     </div>    
     <div>
@@ -109,6 +110,9 @@
             }
             else if (karatValue == "14K") {
                 karatFactor = 14.0 / 24.0;
+            }
+            else if (karatValue == "18K") {
+                karatFactor = 18.0 / 24.0;
             }
             let currentSpotGoldPricePerTroyOunce = await fetchBidPrice("gold");
             let fullValueForTrade = gramNumber * (currentSpotGoldPricePerTroyOunce - fluctuatingPriceFactor) * troyOuncesToGramsFactor * karatFactor * refineryFeeAndDirtFactor;
