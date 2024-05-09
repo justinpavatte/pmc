@@ -120,8 +120,8 @@
             let halfValueForScrap = fullValueForTrade / 2.0;
             let roundedhalfValueForScrap = halfValueForScrap.toFixed(2);
 
-            document.getElementById('tradeValue').value = roundedfullValueForTrade;
-            document.getElementById('scrapValue').value = roundedhalfValueForScrap;
+            document.getElementById('tradeValue').value = "$" + roundedfullValueForTrade;
+            document.getElementById('scrapValue').value = "$" + roundedhalfValueForScrap;
 
             document.getElementById('gldSptPrc').value = currentSpotGoldPricePerTroyOunce;
             document.getElementById('spotFluc').value = fluctuatingPriceFactor;
