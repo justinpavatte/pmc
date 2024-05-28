@@ -116,14 +116,12 @@
             }
             let currentSpotGoldPricePerTroyOunce = await fetchBidPrice("gold");
             let fullValueForTrade = gramNumber * (currentSpotGoldPricePerTroyOunce - fluctuatingPriceFactor) * troyOuncesToGramsFactor * karatFactor * refineryFeeAndDirtFactor;
-            let roundedfullValueForTrade = fullValueForTrade.toFixed(2);
             let halfValueForScrap = fullValueForTrade / 2.0;
-            let roundedhalfValueForScrap = halfValueForScrap.toFixed(2);
 
-            document.getElementById('tradeValue').value = "$" + roundedfullValueForTrade;
-            document.getElementById('scrapValue').value = "$" + roundedhalfValueForScrap;
+            document.getElementById('tradeValue').value = "$" + fullValueForTrade.toFixed(2);;
+            document.getElementById('scrapValue').value = "$" + halfValueForScrap.toFixed(2);;
 
-            document.getElementById('gldSptPrc').value = currentSpotGoldPricePerTroyOunce;
+            document.getElementById('gldSptPrc').value = "$" + currentSpotGoldPricePerTroyOunce.toFixed(2);;
             document.getElementById('spotFluc').value = fluctuatingPriceFactor;
             document.getElementById('prsdGrmInpt').value = gramNumber;
             document.getElementById('troyOzToGrmsFctr').value = troyOuncesToGramsFactor;

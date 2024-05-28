@@ -9,46 +9,12 @@
 <button onclick="addComment()">Add Comment</button>
     <script>
         async function addComment() {
-// Replace with your actual Todoist API token
-const todoist_api_token = "8972a19cadcc698cf4843761485fd359165c061b";
-
-// Replace with the ID of the task you want to comment on
-const taskId = "7994854973";
-
-// Replace with the content of your comment
-const comment = "hello";
-
-  const url = "https://todoist.com/api/v7/sync";
-
-// **Data object with included token**
-const data = {
-  token: todoist_api_token, // Include your API token here
-  commands: JSON.stringify([
-    {
-      type: "item_add_comment",
-      args: {
-        id: taskId,
-        content: comment,
-      },
-    },
-  ]),
-};
-
-try {
-  const response = await fetch(url, {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: { "Content-Type": "application/json" },
-  });
-
-  if (response.ok) {
-    console.log("Comment added successfully!");
-  } else {
-    console.error("Error adding comment:", await response.text());
-  }
-} catch (error) {
-  console.error("Error:", error);
-}
+          const todoist_api_token = "8972a19cadcc698cf4843761485fd359165c061b";
+          const taskId = "7994854973";
+          const commentData = {
+            task_id: taskId,
+            content: "Hi, I'm Bob."
+          };
         }
     </script>
 </body>

@@ -4,15 +4,12 @@
 //     bobInput.value = await fetchBidPrice("gold");
 // }
 // window.onload = updateGoldPrice;
-async function fetchBidPrice(metalType) {
+async function fetchBidPrice(mType) {
     let result = 0;
-    const url = 'https://api.metals.dev/v1/metal/spot?api_key=A9LHCEI3NN7SJJE3UI2I732E3UI2I&metal=' + metalType + '&currency=USD';
-
-    const response = await fetch(url, {
-        headers: {
-            'Accept': 'application/json',
-        },
-    });
+    let aKey = "A9LHCEI3NN7SJJE3UI2I732E3UI2I";
+    let bUrl = "https://api.metals.dev/v1/metal/spot";
+    let url = `${bUrl}?api_key=${aKey}&metal=${mType}&currency=USD`;
+    const response = await fetch(url);
 
     //Sample Return json:
     // {
@@ -32,7 +29,7 @@ async function fetchBidPrice(metalType) {
     //     }
     // }
     const jsonResult = await response.json();
-    if (jsonResult.rate.bid > 0) 
+    if (jsonResult.rate && jsonResult.rate.bid > 0) 
     {
         result = jsonResult.rate.bid;
     }
