@@ -17,6 +17,96 @@
     </style>
 </head>
 <body>
-    <label>not implemented yet</label>
+    <div>
+        <label for="grams">Grams:</label>       
+    </div>
+    <div>
+        <input id="grams" inputmode="numeric" autofocus />
+    </div>   
+    <div>
+        <button id="calcPriceBtn" onclick="calcPrice()">Calculate</button>
+    </div>
+    <div>
+        <label for="tradeValue">Trade:</label>
+    </div>
+    <div>
+        <input readonly id="tradeValue" />
+    </div>
+    <div>
+        <label for="scrapValue">Scrap:</label>
+    </div>
+    <div>
+        <input readonly id="scrapValue" />
+    </div>
+    <div>
+        <br>
+        <label><i>Details...</i></label>
+    </div>
+    <div>
+        <label for="sptPrc">silver spot price:</label>
+    </div>
+    <div>
+        <input readonly id="sptPrc" />
+    </div>
+    <div>
+        <label for="prsdGrmInpt">parsed gram input:</label>
+    </div>
+    <div>
+        <input readonly id="prsdGrmInpt" />
+    </div>
+    <div>
+        <label for="troyOzToGrmsFctr">toz to grm factor:</label>
+    </div>
+    <div>
+        <input readonly id="troyOzToGrmsFctr" />
+    </div>
+    <div>
+        <label for="sterFctr">sterling factor:</label>
+    </div>
+    <div>
+        <input readonly id="sterFctr" />
+    </div>
+    <div>
+        <label for="rfDrt">refine/dirt factor:</label>
+    </div>
+    <div>
+        <input readonly id="rfDrt" />
+    </div>
+    <div>
+        <br>
+        <label><i>Notes...</i></label>
+    </div>
+    <div>The spot price is set by calling a web service to get the current bid price at the moment. This price is in dollars per troy ounce. The bid price shows what buyers are currently willing to pay. Therefore, this is the foundation for what we are willing to pay the customer.</div>
+    <script src="metalprices.js"></script>
+    <script>
+        async function calcPrice() {
+            const troyOuncesToGramsFactor = 0.0322;
+            const refineryFeeAndDirtFactor = 0.86;
+
+            let gramValue = document.getElementById('grams').value;
+            let sterlingFactor = 0.925
+
+            let gramNumber = parseFloat(gramValue);
+            let currentSpotPricePerTroyOunce = await fetchBidPrice("silver");
+            let fullValueForTrade = gramNumber * currentSpotPricePerTroyOunce * troyOuncesToGramsFactor * sterlingFactor * refineryFeeAndDirtFactor;
+            let halfValueForScrap = fullValueForTrade / 2.0;
+
+            document.getElementById('tradeValue').value = "$" + fullValueForTrade.toFixed(2);;
+            document.getElementById('scrapValue').value = "$" + halfValueForScrap.toFixed(2);;
+
+            document.getElementById('sptPrc').value = "$" + currentSpotPricePerTroyOunce.toFixed(2);;
+            document.getElementById('prsdGrmInpt').value = gramNumber;
+            document.getElementById('troyOzToGrmsFctr').value = troyOuncesToGramsFactor;
+            document.getElementById('sterFctr').value = sterlingFactor;
+            document.getElementById('rfDrt').value = refineryFeeAndDirtFactor;
+        }
+        //make enter the accept button
+        document.getElementById('grams').onkeydown = function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                calcPrice();
+            }
+        };
+    </script>
 </body>
 </html>
