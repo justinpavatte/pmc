@@ -9,7 +9,7 @@ async function fetchBidPrice(mType) {
     let aKey = "A9LHCEI3NN7SJJE3UI2I732E3UI2I";
     let bUrl = "https://api.metals.dev/v1/metal/spot";
     let url = `${bUrl}?api_key=${aKey}&metal=${mType}&currency=USD`;
-    const response = await fetch(url);
+    let response = await fetch(url);
 
     //Sample Return json:
     // {
@@ -28,7 +28,7 @@ async function fetchBidPrice(mType) {
     //         "change_percent": -0.57
     //     }
     // }
-    const jsonResult = await response.json();
+    let jsonResult = await response.json();
     if (jsonResult.rate && jsonResult.rate.bid > 0) 
     {
         result = jsonResult.rate.bid;

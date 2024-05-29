@@ -6,15 +6,23 @@
     <title>Todoist</title>
 </head>
 <body>
-<button onclick="addComment()">Add Comment</button>
+<button onclick="addComment()" >Add Comment</button>
     <script>
         async function addComment() {
-          const todoist_api_token = "8972a19cadcc698cf4843761485fd359165c061b";
-          const taskId = "7994854973";
-          const commentData = {
+          let todoist_api_token = "8972a19cadcc698cf4843761485fd359165c061b";
+          let taskId = "7994854973";
+          let commentData = {
             task_id: taskId,
             content: "Hi, I'm Bob."
           };
+          fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${apiToken}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+          });
         }
     </script>
 </body>
