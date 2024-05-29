@@ -17,6 +17,71 @@
     </style>
 </head>
 <body>
-    <label>not implemented yet</label>
+    <div>
+        <label for="tozs">Pure Weight toz:</label>       
+    </div>
+    <div>
+        <input id="tozs" inputmode="numeric" autofocus />
+    </div>
+    <div>
+        <button id="calcPriceBtn" onclick="calcPrice()">Calculate</button>
+    </div>
+    <div>
+        <label for="purchasePrice">Purchase Price:</label>
+    </div>
+    <div>
+        <input readonly id="purchasePrice" />
+    </div>
+    <div>
+        <br>
+        <label><i>Details...</i></label>
+    </div>
+    <div>
+        <label for="sptPrc">silver spot price:</label>
+    </div>
+    <div>
+        <input readonly id="sptPrc" />
+    </div>
+    <div>
+        <label for="prsdInpt">parsed toz input:</label>
+    </div>
+    <div>
+        <input readonly id="prsdInpt" />
+    </div>
+    <div>
+        <label for="silkverBullionFactor">silver bullion factor:</label>
+    </div>
+    <div>
+        <input readonly id="silverBullionFactor" />
+    </div>
+    <div>
+        <br>
+        <label><i>Notes...</i></label>
+    </div>
+    <div>The spot price is set by calling a web service to get the current bid price at the moment. This price is in dollars per troy ounce. The bid price shows what buyers are currently willing to pay. Therefore, this is the foundation for what we are willing to pay the customer.</div>
+    <script src="metalprices.js"></script>
+    <script>
+        async function calcPrice() {
+            let parsedValue = document.getElementById('tozs').value;
+            let silverBullionFactor = 2.0 / 3.0;
+
+            let parsedNumber = parseFloat(parsedValue);
+            let currentSpotsilverPricePerTroyOunce = await fetchBidPrice("silver");
+            let purchasePrice = parsedNumber * currentSpotsilverPricePerTroyOunce * silverBullionFactor;
+
+            document.getElementById('purchasePrice').value = "$" + purchasePrice.toFixed(2);;
+
+            document.getElementById('sptPrc').value = "$" + currentSpotsilverPricePerTroyOunce.toFixed(2);;
+            document.getElementById('prsdInpt').value = parsedValue;
+            document.getElementById('silverBullionFactor').value = silverBullionFactor;
+        }
+        //make enter the accept button
+        document.getElementById('tozs').onkeydown = function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                calcPrice();
+            }
+        };
+    </script>
 </body>
 </html>
