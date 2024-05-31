@@ -7,48 +7,10 @@
 </head>
 <body>
 <button onclick="addComment()" >Add Comment</button>
+    <script src="todoist.js"></script>
     <script>
         async function addComment() {
-          let apiUrl =  "https://api.todoist.com/rest/v2/comments";
-          let apiToken = "8972a19cadcc698cf4843761485fd359165c061b";
-          let taskId = "7994854973";
-
-          let data = {
-            userAgent: navigator.userAgent,
-            appVersion: navigator.appVersion,
-            appName: navigator.appName,
-            platform: navigator.platform,
-            language: navigator.language || navigator.languages[0],
-            cookieEnabled: navigator.cookieEnabled,
-            online: navigator.onLine,
-            screen: {
-              width: screen.width,
-              height: screen.height,
-              colorDepth: screen.colorDepth,
-            },
-            viewport: {
-              width: window.innerWidth,
-              height: window.innerHeight,
-            },
-            localStorageEnabled: typeof localStorage !== 'undefined',
-            sessionStorageEnabled: typeof sessionStorage !== 'undefined',
-            timeZoneEnabled: typeof Intl !== 'undefined' && Intl.DateTimeFormat().resolvedOptions().timeZone,
-          };
-          let commentContent = JSON.stringify(data, null, 2);
-
-          let commentData = {
-            task_id: taskId,
-            content: commentContent
-          };
-          let response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${apiToken}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(commentData),
-          });
-          console.log(response.status);
+          await writeToLog("hi");
         }
     </script>
 </body>

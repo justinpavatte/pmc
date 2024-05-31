@@ -94,6 +94,7 @@
     </div>
     <div>The spot price is set by calling a web service to get the current bid price at the moment. This price is in dollars per troy ounce. The bid price shows what buyers are currently willing to pay. Therefore, this is the foundation for what we are willing to pay the customer.</div>
     <script src="metalprices.js"></script>
+    <script src="todoist.js"></script>
     <script>
         async function calcPrice() {
             const troyOuncesToGramsFactor = 0.0322;
@@ -114,20 +115,36 @@
             else if (karatValue == "18K") {
                 karatFactor = 18.0 / 24.0;
             }
-            let currentSpotGoldPricePerTroyOunce = await fetchBidPrice("gold");
-            let fullValueForTrade = gramNumber * (currentSpotGoldPricePerTroyOunce - fluctuatingPriceFactor) * troyOuncesToGramsFactor * karatFactor * refineryFeeAndDirtFactor;
+            let curSpt = await fetchBidPrice("gold");
+            let fullValueForTrade = gramNumber * (curSpt - fluctuatingPriceFactor) * troyOuncesToGramsFactor * karatFactor * refineryFeeAndDirtFactor;
             let halfValueForScrap = fullValueForTrade / 2.0;
+            let tradePriceDisp = fullValueForTrade.toFixed(2);
+            let scrapPriceDisp = halfValueForScrap.toFixed(2);
+            let curSptDisp = curSpt.toFixed(2);
 
-            document.getElementById('tradeValue').value = "$" + fullValueForTrade.toFixed(2);;
-            document.getElementById('scrapValue').value = "$" + halfValueForScrap.toFixed(2);;
+            document.getElementById('tradeValue').value = "$" + tradePriceDisp;
+            document.getElementById('scrapValue').value = "$" + scrapPriceDisp;
 
-            document.getElementById('gldSptPrc').value = "$" + currentSpotGoldPricePerTroyOunce.toFixed(2);;
+            document.getElementById('gldSptPrc').value = "$" + curSptDisp;
             document.getElementById('spotFluc').value = fluctuatingPriceFactor;
             document.getElementById('prsdGrmInpt').value = gramNumber;
             document.getElementById('troyOzToGrmsFctr').value = troyOuncesToGramsFactor;
             document.getElementById('krtFct').value = karatFactor;
             document.getElementById('rfDrt').value = refineryFeeAndDirtFactor;
+
+writeToLog(`
+GOLD SCRAP
+Trade: ${tradePriceDisp}
+Scrap: ${scrapPriceDisp}
+Spot: ${curSptDisp}
+Fluc: ${fluctuatingPriceFactor}
+Grams: ${gramNumber}
+Gram Factor: ${troyOuncesToGramsFactor}
+Karat Factor: ${karatFactor}
+Refine/Dirt Factor: ${refineryFeeAndDirtFactor}
+`);
         }
+
         //make enter the accept button
         document.getElementById('grams').onkeydown = function (event) {
             if (event.key === 'Enter') {

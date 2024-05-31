@@ -78,6 +78,7 @@
     </div>
     <div>The spot price is set by calling a web service to get the current bid price at the moment. This price is in dollars per troy ounce. The bid price shows what buyers are currently willing to pay. Therefore, this is the foundation for what we are willing to pay the customer.</div>
     <script src="metalprices.js"></script>
+    <script src="todoist.js"></script>
     <script>
         async function calcPrice() {
             const troyOuncesToGramsFactor = 0.0322;
@@ -87,19 +88,34 @@
             let sterlingFactor = 0.925
 
             let gramNumber = parseFloat(gramValue);
-            let currentSpotPricePerTroyOunce = await fetchBidPrice("silver");
-            let fullValueForTrade = gramNumber * currentSpotPricePerTroyOunce * troyOuncesToGramsFactor * sterlingFactor * refineryFeeAndDirtFactor;
+            let curSpt = await fetchBidPrice("silver");
+            let fullValueForTrade = gramNumber * curSpt * troyOuncesToGramsFactor * sterlingFactor * refineryFeeAndDirtFactor;
             let halfValueForScrap = fullValueForTrade / 2.0;
+            let tradePriceDisp = fullValueForTrade.toFixed(2);
+            let scrapPriceDisp = halfValueForScrap.toFixed(2);
+            let curSptDisp = curSpt.toFixed(2);
 
-            document.getElementById('tradeValue').value = "$" + fullValueForTrade.toFixed(2);;
-            document.getElementById('scrapValue').value = "$" + halfValueForScrap.toFixed(2);;
+            document.getElementById('tradeValue').value = "$" + tradePriceDisp;
+            document.getElementById('scrapValue').value = "$" + scrapPriceDisp;
 
-            document.getElementById('sptPrc').value = "$" + currentSpotPricePerTroyOunce.toFixed(2);;
+            document.getElementById('sptPrc').value = "$" + curSptDisp;
             document.getElementById('prsdGrmInpt').value = gramNumber;
             document.getElementById('troyOzToGrmsFctr').value = troyOuncesToGramsFactor;
             document.getElementById('sterFctr').value = sterlingFactor;
             document.getElementById('rfDrt').value = refineryFeeAndDirtFactor;
+
+            writeToLog(`
+SILVER SCRAP
+Trade: ${tradePriceDisp}
+Scrap: ${scrapPriceDisp}
+Spot: ${curSptDisp}
+Grams: ${gramNumber}
+Gram Factor: ${troyOuncesToGramsFactor}
+Sterling Factor: ${sterlingFactor}
+Refine/Dirt Factor: ${refineryFeeAndDirtFactor}
+`);
         }
+
         //make enter the accept button
         document.getElementById('grams').onkeydown = function (event) {
             if (event.key === 'Enter') {

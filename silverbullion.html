@@ -74,21 +74,33 @@
     </div>
     <div>The spot price is set by calling a web service to get the current bid price at the moment. This price is in dollars per troy ounce. The bid price shows what buyers are currently willing to pay. Therefore, this is the foundation for what we are willing to pay the customer.</div>
     <script src="metalprices.js"></script>
+    <script src="todoist.js"></script>
     <script>
         async function calcPrice() {
             let parsedValue = document.getElementById('tozs').value;
             let silverBullionFactor = 2.0 / 3.0;
 
             let parsedNumber = parseFloat(parsedValue);
-            let currentSpotsilverPricePerTroyOunce = await fetchBidPrice("silver");
-            let purchasePrice = parsedNumber * currentSpotsilverPricePerTroyOunce * silverBullionFactor;
+            let curSpt = await fetchBidPrice("silver");
+            let purchasePrice = parsedNumber * curSpt * silverBullionFactor;
+            let purPrcDisp = purchasePrice.toFixed(2);
+            let curSptDisp = curSpt.toFixed(2);
 
-            document.getElementById('purchasePrice').value = "$" + purchasePrice.toFixed(2);;
+            document.getElementById('purchasePrice').value = "$" + purPrcDisp;
 
-            document.getElementById('sptPrc').value = "$" + currentSpotsilverPricePerTroyOunce.toFixed(2);;
+            document.getElementById('sptPrc').value = "$" + curSptDisp;
             document.getElementById('prsdInpt').value = parsedValue;
             document.getElementById('silverBullionFactor').value = silverBullionFactor;
+
+writeToLog(`
+SILVER BULLION
+Purchase Price: ${purPrcDisp}
+Spot Price: ${curSptDisp}
+Gold Weight: ${parsedValue}
+Bullion Factor: ${silverBullionFactor}
+`);
         }
+
         //make enter the accept button
         document.getElementById('tozs').onkeydown = function (event) {
             if (event.key === 'Enter') {
