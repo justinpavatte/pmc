@@ -1,6 +1,6 @@
 async function writeToLog(message) {
     let apiUrl =  "https://api.todoist.com/rest/v2/comments";
-    //Todoist account is Curtis Google
+    //Public Todoist account. Google Curtis.
     let apiToken = "8972a19cadcc698cf4843761485fd359165c061b";
     let taskId = "7994854973";
 

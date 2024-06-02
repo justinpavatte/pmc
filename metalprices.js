@@ -6,6 +6,7 @@
 // window.onload = updateGoldPrice;
 async function fetchBidPrice(mType) {
     let result = 0;
+    //Public api key. Free account.
     let aKey = "A9LHCEI3NN7SJJE3UI2I732E3UI2I";
     let bUrl = "https://api.metals.dev/v1/metal/spot";
     let url = `${bUrl}?api_key=${aKey}&metal=${mType}&currency=USD`;
