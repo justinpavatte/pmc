@@ -6,7 +6,6 @@ async function writeToLog(message) {
 
     let environmentString = `
 User Agent: ${navigator.userAgent}
-App Name: ${navigator.appName}
 Platform: ${navigator.platform}
 Language: ${navigator.language || navigator.languages[0]}
 Screen: ${screen.width}x${screen.height} @ ${screen.colorDepth} bits
