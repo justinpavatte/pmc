@@ -3,12 +3,18 @@ body {
     color: #E3E3E3; 
 }
 
+h1 {
+    margin: 10px;
+    margin-top: 15px;
+    text-align: center;
+}
+
 span {
     margin: 10px;
 }
 
 a {
-    font-size: 35px;
+    font-size: 30px;
     margin: 5px;
     display: inline-block;
     color: #E3E3E3;
