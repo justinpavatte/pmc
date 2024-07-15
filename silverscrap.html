@@ -17,66 +17,69 @@
     </style>
 </head>
 <body>
-    <div>
-        <label for="grams">Grams:</label>       
+    <div class="container">
+        <h1 style="text-align: center; color: silver;">Silver Scrap</h1>
+        <div>
+            <label for="grams">Grams:</label>       
+        </div>
+        <div>
+            <input id="grams" inputmode="numeric" autofocus />
+        </div>   
+        <div>
+            <button id="calcPriceBtn" onclick="calcPrice()">Calculate</button>
+        </div>
+        <div>
+            <label for="tradeValue">Trade:</label>
+        </div>
+        <div>
+            <input readonly id="tradeValue" />
+        </div>
+        <div>
+            <label for="scrapValue">Scrap:</label>
+        </div>
+        <div>
+            <input readonly id="scrapValue" />
+        </div>
+        <div>
+            <br>
+            <label><i>Details...</i></label>
+        </div>
+        <div>
+            <label for="sptPrc">silver spot price:</label>
+        </div>
+        <div>
+            <input readonly id="sptPrc" />
+        </div>
+        <div>
+            <label for="prsdGrmInpt">parsed gram input:</label>
+        </div>
+        <div>
+            <input readonly id="prsdGrmInpt" />
+        </div>
+        <div>
+            <label for="troyOzToGrmsFctr">toz to grm factor:</label>
+        </div>
+        <div>
+            <input readonly id="troyOzToGrmsFctr" />
+        </div>
+        <div>
+            <label for="sterFctr">sterling factor:</label>
+        </div>
+        <div>
+            <input readonly id="sterFctr" />
+        </div>
+        <div>
+            <label for="rfDrt">refine/dirt factor:</label>
+        </div>
+        <div>
+            <input readonly id="rfDrt" />
+        </div>
+        <div>
+            <br>
+            <label><i>Notes...</i></label>
+        </div>
+        <div>The spot price is set by calling a web service to get the current bid price at the moment. This price is in dollars per troy ounce. The bid price shows what buyers are currently willing to pay. Therefore, this is the foundation for what we are willing to pay the customer.</div>
     </div>
-    <div>
-        <input id="grams" inputmode="numeric" autofocus />
-    </div>   
-    <div>
-        <button id="calcPriceBtn" onclick="calcPrice()">Calculate</button>
-    </div>
-    <div>
-        <label for="tradeValue">Trade:</label>
-    </div>
-    <div>
-        <input readonly id="tradeValue" />
-    </div>
-    <div>
-        <label for="scrapValue">Scrap:</label>
-    </div>
-    <div>
-        <input readonly id="scrapValue" />
-    </div>
-    <div>
-        <br>
-        <label><i>Details...</i></label>
-    </div>
-    <div>
-        <label for="sptPrc">silver spot price:</label>
-    </div>
-    <div>
-        <input readonly id="sptPrc" />
-    </div>
-    <div>
-        <label for="prsdGrmInpt">parsed gram input:</label>
-    </div>
-    <div>
-        <input readonly id="prsdGrmInpt" />
-    </div>
-    <div>
-        <label for="troyOzToGrmsFctr">toz to grm factor:</label>
-    </div>
-    <div>
-        <input readonly id="troyOzToGrmsFctr" />
-    </div>
-    <div>
-        <label for="sterFctr">sterling factor:</label>
-    </div>
-    <div>
-        <input readonly id="sterFctr" />
-    </div>
-    <div>
-        <label for="rfDrt">refine/dirt factor:</label>
-    </div>
-    <div>
-        <input readonly id="rfDrt" />
-    </div>
-    <div>
-        <br>
-        <label><i>Notes...</i></label>
-    </div>
-    <div>The spot price is set by calling a web service to get the current bid price at the moment. This price is in dollars per troy ounce. The bid price shows what buyers are currently willing to pay. Therefore, this is the foundation for what we are willing to pay the customer.</div>
     <script src="metalprices.js"></script>
     <script src="todoist.js"></script>
     <script>

@@ -16,63 +16,66 @@
         }
     </style>
 </head>
-<body>
-    <div>
-        <label for="tozs">Pure Weight (toz):</label>
+<body>    
+    <div class="container">
+        <h1 style="text-align: center; color: gold;">Gold Bullion</h1>
+        <div>
+            <label for="tozs">Pure Weight (toz):</label>
+        </div>
+        <div>
+            <input id="tozs" inputmode="numeric" autofocus />
+        </div>
+        <div>
+            <button id="calcPriceBtn" onclick="calcPrice()">Calculate</button>
+        </div>
+        <div>
+            <label for="purchasePrice">Purchase Price:</label>
+        </div>
+        <div>
+            <input readonly id="purchasePrice" />
+        </div>
+        <div>
+            <br>
+            <label><i>Details...</i></label>
+        </div>
+        <div>
+            <label for="gldSptPrc">gold spot price:</label>
+        </div>
+        <div>
+            <input readonly id="gldSptPrc" />
+        </div>
+        <div>
+            <label for="prsdInpt">parsed toz input:</label>
+        </div>
+        <div>
+            <input readonly id="prsdInpt" />
+        </div>
+        <div>
+            <label for="goldBullionFactor">gold bullion factor:</label>
+        </div>
+        <div>
+            <input readonly id="goldBullionFactor" />
+        </div>
+        <div>
+            <br>
+            <label><i>Dale's Bullion Verification Method</i></label>
+        </div>
+        <div>1. Find it on the internet</div>
+        <div>2. Get its details</div>
+        <div style="text-indent: 1em;">
+            <div>a. Diameter</div>
+            <div>b. Thickness</div>
+            <div>c. Gross wgt</div>
+            <div style="text-indent: 2em;">Gold wgt (often 90% of Gross)</div>  
+        </div>
+        <div>3. If a. b. c. are right, I count it as 'real'.</div>
+        <div>4. Pay customer 80% of its gold value. No trade value.</div>
+        <div>
+            <br>
+            <label><i>Notes...</i></label>
+        </div>
+        <div>The spot price is set by calling a web service to get the current bid price at the moment. This price is in dollars per troy ounce. The bid price shows what buyers are currently willing to pay. Therefore, this is the foundation for what we are willing to pay the customer.</div>
     </div>
-    <div>
-        <input id="tozs" inputmode="numeric" autofocus />
-    </div>
-    <div>
-        <button id="calcPriceBtn" onclick="calcPrice()">Calculate</button>
-    </div>
-    <div>
-        <label for="purchasePrice">Purchase Price:</label>
-    </div>
-    <div>
-        <input readonly id="purchasePrice" />
-    </div>
-    <div>
-        <br>
-        <label><i>Details...</i></label>
-    </div>
-    <div>
-        <label for="gldSptPrc">gold spot price:</label>
-    </div>
-    <div>
-        <input readonly id="gldSptPrc" />
-    </div>
-    <div>
-        <label for="prsdInpt">parsed toz input:</label>
-    </div>
-    <div>
-        <input readonly id="prsdInpt" />
-    </div>
-    <div>
-        <label for="goldBullionFactor">gold bullion factor:</label>
-    </div>
-    <div>
-        <input readonly id="goldBullionFactor" />
-    </div>
-    <div>
-        <br>
-        <label><i>Dale's Bullion Verification Method</i></label>
-    </div>
-    <div>1. Find it on the internet</div>
-    <div>2. Get its details</div>
-    <div style="text-indent: 1em;">
-        <div>a. Diameter</div>
-        <div>b. Thickness</div>
-        <div>c. Gross wgt</div>
-        <div style="text-indent: 2em;">Gold wgt (often 90% of Gross)</div>  
-    </div>
-    <div>3. If a. b. c. are right, I count it as 'real'.</div>
-    <div>4. Pay customer 80% of its gold value. No trade value.</div>
-    <div>
-        <br>
-        <label><i>Notes...</i></label>
-    </div>
-    <div>The spot price is set by calling a web service to get the current bid price at the moment. This price is in dollars per troy ounce. The bid price shows what buyers are currently willing to pay. Therefore, this is the foundation for what we are willing to pay the customer.</div>
     <script src="metalprices.js"></script>
     <script src="todoist.js"></script>
     <script>
