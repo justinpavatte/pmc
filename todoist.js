@@ -1,5 +1,5 @@
-function detectPlatform() {
-  let platform = 'Unknown platform';
+function detectDevice() {
+  let platform = 'Unknown';
 
   // Attempt to use User-Agent Client Hints
   if (navigator.userAgentData) {
@@ -11,29 +11,21 @@ function detectPlatform() {
   }
 
   // Fallback to parsing navigator.userAgent
-  const userAgent = navigator.userAgent;
-
-  if (userAgent.includes('Windows NT')) {
+  let userAgent = window.navigator.userAgent.toLowerCase();
+  if (userAgent.includes('windows')) {
       platform = 'Windows';
-  } else if (userAgent.includes('Android')) {
+  } else if (userAgent.includes('android')) {
       platform = 'Android';
-  } else if (userAgent.includes('iPhone')) {
+  } else if (userAgent.includes('iphone')) {
       platform = 'iPhone';
-  } else if (userAgent.includes('iPad')) {
+  } else if (userAgent.includes('ipad')) {
       platform = 'iPad';
-  } else if (userAgent.includes('Macintosh') || userAgent.includes('Mac OS X')) {
-      platform = 'macOS';
+  } else if (userAgent.includes('mac')) {
+      platform = 'Mac';
   } else if (userAgent.includes('Linux')) {
       platform = 'Linux';
   }
-
-  if (platform !== 'Unknown platform') {
-      return platform;
-  }
-
-  // Fallback to navigator.platform as the last resort
-  platform = navigator.platform;
-  console.log(`Detected platform using navigator.platform: ${platform}`);
+  
   return platform;
 }
 
@@ -43,13 +35,13 @@ async function writeToLog(message) {
     let apiToken = "8972a19cadcc698cf4843761485fd359165c061b";
     let taskId = "7994854973";
 
-    let p = detectPlatform();
+    let d = detectDevice();
     let environmentString = `
-Platform: ${p}
-Platform(Legacy): ${navigator.platform}
+Device: ${d}
+Platform: ${navigator.platform}
 Screen: ${screen.width}x${screen.height} @ ${screen.colorDepth} bits
 Language: ${navigator.language || navigator.languages[0]}
-Time Zone Enabled: ${typeof Intl !== 'undefined' && Intl.DateTimeFormat().resolvedOptions().timeZone}
+Time Zone Enabled: ${typeof Intl !== 'Undefined' && Intl.DateTimeFormat().resolvedOptions().timeZone}
 `;
 
     let commentData = {
