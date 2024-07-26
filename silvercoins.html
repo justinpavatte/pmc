@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PMC</title>
+    <!-- https://favicon.io/favicon-converter/ -->
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <style>
+        label {
+            color: silver;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="color: silver;">Silver Coins</h1>
+        <div>
+            <label for="grams">Grams (Pure Wgt):</label>       
+        </div>
+        <div>
+            <input id="grams" inputmode="numeric" autofocus />
+        </div>   
+        <div>
+            <button id="calcPriceBtn" onclick="calcPrice()">Calculate</button>
+        </div>
+        <div>
+            <label for="purchasePrice">Purchase Price:</label>
+        </div>
+        <div>
+            <input readonly id="purchasePrice" />
+        </div>
+        <div>
+            <br>
+            <label><i>Details...</i></label>
+        </div>
+        <div>
+            <label for="sptPrc">silver spot price:</label>
+        </div>
+        <div>
+            <input readonly id="sptPrc" />
+        </div>
+        <div>
+            <label for="prsdGrmInpt">parsed gram input:</label>
+        </div>
+        <div>
+            <input readonly id="prsdGrmInpt" />
+        </div>
+        <div>
+            <label for="troyOzToGrmsFctr">toz to grm factor:</label>
+        </div>
+        <div>
+            <input readonly id="troyOzToGrmsFctr" />
+        </div>
+        <div>
+            <label for="coinFctr">silver coin factor:</label>
+        </div>
+        <div>
+            <input readonly id="coinFctr" />
+        </div>
+        <div>
+            <br>
+            <label><i>Dale's Coin Verification Method</i></label>
+        </div>
+        <div>1. We do silver in nickels, dimes, quaters, and half dollars.</div>
+        <div>2. Different years have a different percentage of silver.</div>
+        <div>3. Find it on the internet.</div>
+        <div>4. Pay customer 2/3 of its silver value. No trade value.</div>
+        <div>
+            <br>
+            <label><i>Notes...</i></label>
+        </div>
+        <div>The spot price is set by calling a web service to get the current bid price at the moment. This price is in dollars per troy ounce. The bid price shows what buyers are currently willing to pay. Therefore, this is the foundation for what we are willing to pay the customer.</div>
+    </div>
+    <script src="metalprices.js"></script>
+    <script src="todoist.js"></script>
+    <script>
+        async function calcPrice() {
+            const troyOuncesToGramsFactor = 0.0322;
+
+            let gramValue = document.getElementById('grams').value;
+            let silverCoinFactor = 2.0 / 3.0
+
+            let gramNumber = parseFloat(gramValue);
+            let curSpt = await fetchBidPrice("silver");
+            let purchasePrice = gramNumber * curSpt * troyOuncesToGramsFactor * silverCoinFactor;
+            let purPrcDisp = purchasePrice.toFixed(2);
+            let curSptDisp = curSpt.toFixed(2);
+
+            document.getElementById('purchasePrice').value = "$" + purPrcDisp;
+
+            document.getElementById('sptPrc').value = "$" + curSptDisp;
+            document.getElementById('prsdGrmInpt').value = gramNumber;
+            document.getElementById('troyOzToGrmsFctr').value = troyOuncesToGramsFactor;
+            document.getElementById('coinFctr').value = silverCoinFactor;
+
+            writeToLog(`
+SILVER COINS
+Grams: ${gramNumber}
+Purchase Price: ${purPrcDisp}
+Spot Price: ${curSptDisp}
+Gram Factor: ${troyOuncesToGramsFactor}
+Coin Factor: ${silverCoinFactor}
+`);
+        }
+
+        //make enter the accept button
+        document.getElementById('grams').onkeydown = function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                calcPrice();
+            }
+        };
+    </script>
+</body>
+</html>
