@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PMC</title>
+    <title>PMC - Silver Coins</title>
     <!-- https://favicon.io/favicon-converter/ -->
     <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
@@ -11,113 +11,134 @@
     <link rel="manifest" href="site.webmanifest">
     <link rel="stylesheet" type="text/css" href="styles.css">
     <style>
-        label {
-            color: silver;
-        }
+        label { color: silver; }
+        .coin-input { width: 4em; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1 style="color: silver;">Silver Coins</h1>
-        <div>
-            <label for="grams">Grams (Pure Wgt):</label>       
-        </div>
-        <div>
-            <input id="grams" inputmode="numeric" autofocus />
-        </div>   
-        <div>
-            <button id="calcPriceBtn" onclick="calcPrice()">Calculate</button>
-        </div>
-        <div>
-            <label for="purchasePrice">Purchase Price:</label>
-        </div>
-        <div>
-            <input readonly id="purchasePrice" />
-        </div>
-        <div>
-            <br>
-            <label><i>Details...</i></label>
-        </div>
-        <div>
-            <label for="sptPrc">silver spot price:</label>
-        </div>
-        <div>
-            <input readonly id="sptPrc" />
-        </div>
-        <div>
-            <label for="prsdGrmInpt">parsed gram input:</label>
-        </div>
-        <div>
-            <input readonly id="prsdGrmInpt" />
-        </div>
-        <div>
-            <label for="troyOzToGrmsFctr">toz to grm factor:</label>
-        </div>
-        <div>
-            <input readonly id="troyOzToGrmsFctr" />
-        </div>
-        <div>
-            <label for="coinFctr">silver coin factor:</label>
-        </div>
-        <div>
-            <input readonly id="coinFctr" />
-        </div>
-        <div>
-            <br>
-            <label><i>Dale's Coin Verification Method</i></label>
-        </div>
+        <!-- Coin count inputs -->
+        <div><label for="nickels">Nickels (1943–1945):</label></div>
+        <div><input id="nickels" type="number" min="0"/></div>
+        <div><label for="dimes">Dimes (1916–1964):</label></div>
+        <div><input id="dimes" type="number" min="0"/></div>
+        <div><label for="quarters">Quarters (1916–1930, 1932–1964):</label></div>
+        <div><input id="quarters" type="number" min="0"/></div>
+        <div><label for="halfDollarsPre1965">Half Dollars (pre-1965):</label></div>
+        <div><input id="halfDollarsPre1965" type="number" min="0"/></div>
+        <div><label for="halfDollars1965to1970">Half Dollars (1965–1970):</label></div>
+        <div><input id="halfDollars1965to1970" type="number" min="0"/></div>
+        <div><label for="dollars">Dollar Coins (pre-1935):</label></div>
+        <div><input id="dollars" type="number" min="0"/></div>
+
+        <!-- Calculate button -->
+        <div><button id="calcPriceBtn" onclick="calcPrice()">Calculate</button></div>
+
+        <!-- Results -->
+        <div><label for="purchasePrice">Purchase Price:</label></div>
+        <div><input readonly id="purchasePrice" /></div>
+
+        <div><br><label><i>Details...</i></label></div>
+        <div><label for="sptPrc">Silver spot price:</label></div>
+        <div><input readonly id="sptPrc" /></div>
+        <div><label for="prsdGrmInpt">Total silver grams:</label></div>
+        <div><input readonly id="prsdGrmInpt" /></div>
+        <div><label for="troyOzToGrmsFctr">Toz to grm factor:</label></div>
+        <div><input readonly id="troyOzToGrmsFctr" /></div>
+        <div><label for="coinFctr">Silver coin factor:</label></div>
+        <div><input readonly id="coinFctr" /></div>
+
+        <!-- Method description -->
+        <div><br><label><i>Dale's Coin Verification Method</i></label></div>
         <div>1. We do silver in nickels, dimes, quarters, and half dollars</div>
-        <div style="text-indent: 1em;">
-            <div>(Treat pure silver coins as bullion)</div>
-        </div>
+        <div style="text-indent: 1em;"><div>(Treat pure silver coins as bullion)</div></div>
         <div>2. Different years have a different percentage of silver.</div>
         <div>3. Find it on the internet.</div>
         <div>4. Pay customer 2/3 of its silver value. No trade value.</div>
-        <div>
-            <br>
-            <label><i>Notes...</i></label>
-        </div>
+
+        <div><br><label><i>Notes...</i></label></div>
         <div>The spot price is set by calling a web service to get the current bid price at the moment. This price is in dollars per troy ounce. The bid price shows what buyers are currently willing to pay. Therefore, this is the foundation for what we are willing to pay the customer.</div>
     </div>
+
     <script src="metalprices.js"></script>
     <script src="todoist.js"></script>
     <script>
-        async function calcPrice() {0
+        async function calcPrice() {
             const troyOuncesToGramsFactor = 1.0 / 31.1035;
+            // Retrieve coin counts
+            const countNickels = parseInt(document.getElementById('nickels').value) || 0;
+            const countDimes = parseInt(document.getElementById('dimes').value) || 0;
+            const countQuarters = parseInt(document.getElementById('quarters').value) || 0;
+            const countHalfPre1965 = parseInt(document.getElementById('halfDollarsPre1965').value) || 0;
+            const countHalf1965to1970 = parseInt(document.getElementById('halfDollars1965to1970').value) || 0;
+            const countDollars = parseInt(document.getElementById('dollars').value) || 0;
 
-            let gramValue = document.getElementById('grams').value;
-            let silverCoinFactor = 2.0 / 3.0
+            // Silver content functions (grams)
+            function getSilverContentNickel() { 
+                // War nickels (1942–1945): 5.00g · 35% silver = 1.75g 
+                return 1.75; /* ([coinflation.com](https://www.coinflation.com/coins/1942-1945-Silver-War-Nickel-Value.html?utm_source=chatgpt.com), [free-bullion-investment-guide.com](https://www.free-bullion-investment-guide.com/junk_silver_coins.html?utm_source=chatgpt.com)) */
+            }
+            function getSilverContentDime() { 
+                // Dimes (1916–1964): 2.50g · 90% silver = 2.25g 
+                return 2.25; /* ([coinflation.com](https://www.coinflation.com/coins/1946-1964-Silver-Roosevelt-Dime-Value.html?utm_source=chatgpt.com), [sdbullion.com](https://sdbullion.com/blog/how-much-silver-in-a-silver-dime?srsltid=AfmBOoqw6OpA3PDBc-_IoXbi0ynp6sXI_c8LGokelZB4WAzrGMFkV8oz&utm_source=chatgpt.com)) */
+            }
+            function getSilverContentQuarter() { 
+                // Quarters (1916–1964): 6.25g · 90% silver = 5.625g 
+                return 5.625; /* ([boldpreciousmetals.com](https://www.boldpreciousmetals.com/blogs/how-much-does-a-silver-quarter-weigh?srsltid=AfmBOorEjT9T9DYE3ubwgh5fpdHJ800gVJxA-JqQWEinClJkGp9Qdkqx&utm_source=chatgpt.com)) */
+            }
+            function getSilverContentHalfPre1965() { 
+                // Half Dollars (pre-1965): 12.50g · 90% silver = 11.25g 
+                return 11.25; /* ([sebastiancharles.com](https://sebastiancharles.com/blog/how-much-silver-is-in-kennedy-half-dollars?utm_source=chatgpt.com)) */
+            }
+            function getSilverContentHalf1965to1970() { 
+                // Half Dollars (1965–1970): 11.50g · 40% silver = 4.6g 
+                return 4.6; /* ([sebastiancharles.com](https://sebastiancharles.com/blog/how-much-silver-is-in-kennedy-half-dollars?utm_source=chatgpt.com)) */
+            }
+            function getSilverContentDollar() { 
+                // Dollar Coins (pre-1935): 26.73g · 90% silver = 24.057g 
+                return 24.057; /* ([govmint.com](https://www.govmint.com/coin-authority/post/how-much-do-morgan-silver-dollars-weigh?srsltid=AfmBOopCQA3CxB9O9r29qvryW8Nl-Gx5U-OLjspWHOcd3cM3wLmQP-pO&utm_source=chatgpt.com), [en.wikipedia.org](https://en.wikipedia.org/wiki/Mercury_dime?utm_source=chatgpt.com)) */
+            }
 
-            let gramNumber = parseFloat(gramValue);
-            let curSpt = await fetchBidPrice("silver");
-            let purchasePrice = gramNumber * curSpt * troyOuncesToGramsFactor * silverCoinFactor;
-            let purPrcDisp = purchasePrice.toFixed(2);
-            let curSptDisp = curSpt.toFixed(2);
+            // Calculate total silver grams
+            const totalGrams =
+                countNickels * getSilverContentNickel() +
+                countDimes * getSilverContentDime() +
+                countQuarters * getSilverContentQuarter() +
+                countHalfPre1965 * getSilverContentHalfPre1965() +
+                countHalf1965to1970 * getSilverContentHalf1965to1970() +
+                countDollars * getSilverContentDollar();
 
-            document.getElementById('purchasePrice').value = "$" + purPrcDisp;
+            //const silverCoinFactor = 2.0 / 3.0;
+            //He said that the factor is 2/3 but his calculation sheet appears to use just .6
+            const silverCoinFactor = .6;
+            const curSpt = await fetchBidPrice("silver");
+            const purchasePrice = totalGrams * curSpt * troyOuncesToGramsFactor * silverCoinFactor;
 
-            document.getElementById('sptPrc').value = "$" + curSptDisp;
-            document.getElementById('prsdGrmInpt').value = gramNumber;
+            // Display results
+            document.getElementById('purchasePrice').value = "$" + purchasePrice.toFixed(2);
+            document.getElementById('sptPrc').value = "$" + curSpt.toFixed(2);
+            document.getElementById('prsdGrmInpt').value = totalGrams.toFixed(2);
             document.getElementById('troyOzToGrmsFctr').value = troyOuncesToGramsFactor;
             document.getElementById('coinFctr').value = silverCoinFactor;
 
             writeToLog(`
 SILVER COINS
-Grams: ${gramNumber}
-Purchase Price: ${purPrcDisp}
-Spot Price: ${curSptDisp}
-Gram Factor: ${troyOuncesToGramsFactor}
+Total Silver Grams: ${totalGrams.toFixed(2)}
+Purchase Price: ${purchasePrice.toFixed(2)}
+Spot Price: ${curSpt.toFixed(2)}
+Toz->Grams Factor: ${troyOuncesToGramsFactor}
 Coin Factor: ${silverCoinFactor}
 `);
         }
 
-        //make enter the accept button
-        document.getElementById('grams').onkeydown = function (event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                calcPrice();
-            }
-        };
+        // Allow Enter key to trigger calculation
+        document.querySelectorAll('#nickels, #dimes, #quarters, #halfDollarsPre1965, #halfDollars1965to1970, #dollars')
+            .forEach(el => el.onkeydown = function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); calcPrice();
+                }
+            });
     </script>
 </body>
 </html>
