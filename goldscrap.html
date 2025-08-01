@@ -23,18 +23,20 @@
             <label for="grams">Grams:</label>       
         </div>
         <div>
-            <input id="grams" inputmode="numeric" autofocus />
+            <input id="grams" type="text" inputmode="decimal" />
         </div>
         <div>
-            <label for="karat">Karat:</label>       
+            <label for="karat">Karat (1–24):</label>       
         </div>
         <div>
-            <select id="karat">
-                <option value="10K">10K</option>
-                <option value="14K">14K</option>
-                <option value="18K">18K</option>
-                <option value="22K">22K</option>
-            </select>
+            <input
+              id="karat"
+              type="number"
+              inputmode="numeric"
+              min="1"
+              max="24"
+              step="1"
+            />
         </div>    
         <div>
             <button id="calcPriceBtn" onclick="calcPrice()">Calculate</button>
@@ -95,7 +97,11 @@
             <br>
             <label><i>Notes...</i></label>
         </div>
-    <div>The spot price is set by calling a web service to get the current bid price at the moment. This price is in dollars per troy ounce. The bid price shows what buyers are currently willing to pay. Therefore, this is the foundation for what we are willing to pay the customer.</div>
+        <div>
+            The spot price is set by calling a web service to get the current bid price at the moment.
+            This price is in dollars per troy ounce. The bid price shows what buyers are currently
+            willing to pay. Therefore, this is the foundation for what we are willing to pay the customer.
+        </div>
     </div>
     <script src="metalprices.js"></script>
     <script src="todoist.js"></script>
@@ -105,29 +111,35 @@
             const fluctuatingPriceFactor = 100.0;
             const refineryFeeAndDirtFactor = 0.9175;
 
-            let gramValue = document.getElementById('grams').value;
-            let karatValue = document.getElementById('karat').value;
+            const gramValue = document.getElementById('grams').value.trim();
+            const karatValue = document.getElementById('karat').value.trim();
 
-            let gramNumber = parseFloat(gramValue);
-            let karatFactor = 0.0;
-            if (karatValue == "10K") {
-                karatFactor = 10.0 / 24.0;
+            const gramNumber = parseFloat(gramValue);
+            const karatNumber = parseInt(karatValue, 10);
+
+            if (isNaN(gramNumber) || gramNumber <= 0 ||
+                isNaN(karatNumber) || karatNumber < 1 || karatNumber > 24) {
+                // clear outputs on invalid input
+                document.getElementById('tradeValue').value = "";
+                document.getElementById('scrapValue').value = "";
+                return;
             }
-            else if (karatValue == "14K") {
-                karatFactor = .585;
-            }
-            else if (karatValue == "18K") {
-                karatFactor = 18.0 / 24.0;
-            }
-            else if (karatValue == "22K") {
-                karatFactor = 22.0 / 24.0;
-            }
-            let curSpt = await fetchBidPrice("gold");
-            let fullValueForTrade = gramNumber * (curSpt - fluctuatingPriceFactor) * troyOuncesToGramsFactor * karatFactor * refineryFeeAndDirtFactor;
-            let halfValueForScrap = fullValueForTrade / 2.0;
-            let tradePriceDisp = fullValueForTrade.toFixed(2);
-            let scrapPriceDisp = halfValueForScrap.toFixed(2);
-            let curSptDisp = curSpt.toFixed(2);
+
+            const karatFactor = karatNumber / 24.0;
+            const curSpt = await fetchBidPrice("gold");
+
+            const fullValueForTrade =
+                gramNumber
+                * (curSpt - fluctuatingPriceFactor)
+                * troyOuncesToGramsFactor
+                * karatFactor
+                * refineryFeeAndDirtFactor;
+
+            const halfValueForScrap = fullValueForTrade / 2.0;
+
+            const tradePriceDisp = fullValueForTrade.toFixed(2);
+            const scrapPriceDisp = halfValueForScrap.toFixed(2);
+            const curSptDisp = curSpt.toFixed(2);
 
             document.getElementById('tradeValue').value = "$" + tradePriceDisp;
             document.getElementById('scrapValue').value = "$" + scrapPriceDisp;
@@ -139,26 +151,29 @@
             document.getElementById('krtFct').value = karatFactor;
             document.getElementById('rfDrt').value = refineryFeeAndDirtFactor;
 
-writeToLog(`
+            writeToLog(`
 GOLD SCRAP
 Grams: ${gramNumber}
+Karat: ${karatNumber}
+Karat Factor: ${karatFactor}
 Trade: ${tradePriceDisp}
 Scrap: ${scrapPriceDisp}
 Spot: ${curSptDisp}
 Fluc: ${fluctuatingPriceFactor}
 Gram Factor: ${troyOuncesToGramsFactor}
-Karat Factor: ${karatFactor}
 Refine/Dirt Factor: ${refineryFeeAndDirtFactor}
 `);
         }
 
-        //make enter the accept button
-        document.getElementById('grams').onkeydown = function (event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                calcPrice();
-            }
-        };
+        // allow Enter key on both inputs
+        ['grams', 'karat'].forEach(id => {
+            document.getElementById(id).onkeydown = function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    calcPrice();
+                }
+            };
+        });
     </script>
 </body>
 </html>

@@ -21,6 +21,7 @@ a {
 }
  
 label {
+    display: block;
     font-size: 25px;
     margin: 5px;
 }
