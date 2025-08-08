@@ -45,6 +45,9 @@ button {
     padding: 15px;
     border-radius: 10px;
     width: 96%;
+    color: inherit;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
 select {
