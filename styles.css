@@ -35,19 +35,18 @@ input {
     border-radius: 5px;
     max-width: 400px;
     width: 95%;
+    box-sizing: border-box; /* ✅ Fixes iPhone overflow issue */
 }
 
 button {
     background-color: #8d8f91;
+    color: #1E1F20;
     font-weight: bold;
     font-size: 25px;
     margin: 10px 5px 5px 5px;
     padding: 15px;
     border-radius: 10px;
     width: 96%;
-    color: inherit;
-    -webkit-appearance: none;
-    appearance: none;
 }
 
 select {
