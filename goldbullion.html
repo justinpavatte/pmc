@@ -4,26 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PMC</title>
-    <!-- https://favicon.io/favicon-converter/ -->
     <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
     <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
     <link rel="manifest" href="site.webmanifest">
     <link rel="stylesheet" type="text/css" href="styles.css">
     <style>
-        label {
-            color: gold;
-        }
+        label { color: gold; }
     </style>
 </head>
-<body>    
+<body>
     <div class="container">
         <h1 style="color: gold;">Gold Bullion</h1>
-        <div>
-            <label for="tozs">Pure/Label* Amt (toz):</label>
+
+        <div style="display:flex;align-items:center;justify-content:space-between;white-space:nowrap;">
+            <label for="inpt" style="margin:0;">Pure/Label* Amt:</label>
+            <div style="display:inline-flex;align-items:center;gap:6px;margin-right:10px;">
+                <input type="radio" name="unit" id="unit-toz" value="toz" checked>
+                <label for="unit-toz" style="margin:0;">toz</label>
+                <input type="radio" name="unit" id="unit-g" value="grm">
+                <label for="unit-g" style="margin:0;">grm</label>
+            </div>
         </div>
+
         <div>
-            <input id="tozs" type="text" inputmode="decimal" autofocus />
+            <input id="inpt" type="text" inputmode="decimal" autofocus />
         </div>
         <div>
             <button id="calcPriceBtn" onclick="calcPrice()">Calculate</button>
@@ -34,6 +39,7 @@
         <div>
             <input readonly id="purchasePrice" />
         </div>
+
         <div>
             <br>
             <label><i>Details...</i></label>
@@ -45,7 +51,7 @@
             <input readonly id="gldSptPrc" />
         </div>
         <div>
-            <label for="prsdInpt">parsed toz input:</label>
+            <label for="prsdInpt">parsed input toz:</label>
         </div>
         <div>
             <input readonly id="prsdInpt" />
@@ -56,6 +62,7 @@
         <div>
             <input readonly id="goldBullionFactor" />
         </div>
+
         <div>
             <br>
             <label><i>Pure/Label*</i></label>
@@ -71,7 +78,7 @@
             <div>a. Diameter</div>
             <div>b. Thickness</div>
             <div>c. Gross wgt</div>
-            <div style="text-indent: 2em;">Gold wgt (often 90% of Gross)</div>  
+            <div style="text-indent: 2em;">Gold wgt (often 90% of Gross)</div>
         </div>
         <div>3. If a. b. c. are right, I count it as 'real'.</div>
         <div>4. Pay customer 80% of its gold value. No trade value.</div>
@@ -81,36 +88,39 @@
         </div>
         <div>The spot price is set by calling a web service to get the current bid price at the moment. This price is in dollars per troy ounce. The bid price shows what buyers are currently willing to pay. Therefore, this is the foundation for what we are willing to pay the customer.</div>
     </div>
+
     <script src="metalprices.js"></script>
     <script src="todoist.js"></script>
     <script>
         async function calcPrice() {
-            let parsedValue = document.getElementById('tozs').value;
+            let parsedValue = parseFloat(document.getElementById('inpt').value);
             let goldBullionFactor = 0.8;
 
-            let parsedNumber = parseFloat(parsedValue);
+            let unit = document.querySelector('input[name="unit"]:checked').value;
+            if (unit === 'grm') {
+                parsedValue = parsedValue / 31.1035;
+            }
+
             let curSpt = await fetchBidPrice("gold");
-            let purchasePrice = parsedNumber * curSpt * goldBullionFactor;
+            let purchasePrice = parsedValue * curSpt * goldBullionFactor;
             let purPrcDisp = purchasePrice.toFixed(2);
             let curSptDisp = curSpt.toFixed(2);
 
             document.getElementById('purchasePrice').value = "$" + purPrcDisp;
-
             document.getElementById('gldSptPrc').value = "$" + curSptDisp;
-            document.getElementById('prsdInpt').value = parsedValue;
+            document.getElementById('prsdInpt').value = parsedValue.toFixed(4);
             document.getElementById('goldBullionFactor').value = goldBullionFactor;
 
-writeToLog(`
+            writeToLog(`
 GOLD BULLION
-Toz: ${parsedValue}
+Inpt: ${parsedValue}
 Purchase Price: ${purPrcDisp}
 Spot Price: ${curSptDisp}
 Bullion Factor: ${goldBullionFactor}
 `);
         }
-        
-        //make enter the accept button
-        document.getElementById('tozs').onkeydown = function (event) {
+
+        document.getElementById('inpt').onkeydown = function (event) {
             if (event.key === 'Enter') {
                 event.preventDefault();
                 calcPrice();

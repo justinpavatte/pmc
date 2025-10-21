@@ -19,11 +19,17 @@
 <body>
     <div class="container">
         <h1 style="color: silver;">Silver Bullion</h1>
-        <div>
-            <label for="tozs">Pure/Label* Amt (toz):</label>       
+        <div style="display:flex;align-items:center;justify-content:space-between;white-space:nowrap;">
+        <label for="inpt" style="margin:0;">Pure/Label* Amt:</label>
+        <div style="display:inline-flex;align-items:center;gap:6px;margin-right:10px;">
+            <input type="radio" name="unit" id="unit-toz" value="toz" checked>
+            <label for="unit-toz" style="margin:0;">toz</label>
+            <input type="radio" name="unit" id="unit-g" value="grm">
+            <label for="unit-g" style="margin:0;">grm</label>
+        </div>
         </div>
         <div>
-            <input id="tozs" type="text" inputmode="decimal" autofocus />
+            <input id="inpt" type="text" inputmode="decimal" autofocus />
         </div>
         <div>
             <button id="calcPriceBtn" onclick="calcPrice()">Calculate</button>
@@ -45,7 +51,7 @@
             <input readonly id="sptPrc" />
         </div>
         <div>
-            <label for="prsdInpt">parsed toz input:</label>
+            <label for="prsdInpt">parsed input toz:</label>
         </div>
         <div>
             <input readonly id="prsdInpt" />
@@ -84,24 +90,29 @@
     <script src="todoist.js"></script>
     <script>
         async function calcPrice() {
-            let parsedValue = document.getElementById('tozs').value;
-            let silverBullionFactor = 0.8;
+let parsedValue = parseFloat(document.getElementById('inpt').value);
+let silverBullionFactor = 0.8;
 
-            let parsedNumber = parseFloat(parsedValue);
-            let curSpt = await fetchBidPrice("silver");
-            let purchasePrice = parsedNumber * curSpt * silverBullionFactor;
-            let purPrcDisp = purchasePrice.toFixed(2);
-            let curSptDisp = curSpt.toFixed(2);
+// conversion if grams selected
+let unit = document.querySelector('input[name="unit"]:checked').value;
+if (unit === 'grm') {
+  parsedValue = parsedValue / 31.1035; // convert grams → troy ounces
+}
 
-            document.getElementById('purchasePrice').value = "$" + purPrcDisp;
+let curSpt = await fetchBidPrice("silver");
+let purchasePrice = parsedValue * curSpt * silverBullionFactor;
+let purPrcDisp = purchasePrice.toFixed(2);
+let curSptDisp = curSpt.toFixed(2);
 
-            document.getElementById('sptPrc').value = "$" + curSptDisp;
-            document.getElementById('prsdInpt').value = parsedValue;
-            document.getElementById('silverBullionFactor').value = silverBullionFactor;
+document.getElementById('purchasePrice').value = "$" + purPrcDisp;
+document.getElementById('sptPrc').value = "$" + curSptDisp;
+document.getElementById('prsdInpt').value = parsedValue.toFixed(4);
+document.getElementById('silverBullionFactor').value = silverBullionFactor;
+
 
 writeToLog(`
 SILVER BULLION
-Toz: ${parsedValue}
+Inpt: ${parsedValue}
 Purchase Price: ${purPrcDisp}
 Spot Price: ${curSptDisp}
 Bullion Factor: ${silverBullionFactor}
@@ -109,7 +120,7 @@ Bullion Factor: ${silverBullionFactor}
         }
 
         //make enter the accept button
-        document.getElementById('tozs').onkeydown = function (event) {
+        document.getElementById('inpt').onkeydown = function (event) {
             if (event.key === 'Enter') {
                 event.preventDefault();
                 calcPrice();
